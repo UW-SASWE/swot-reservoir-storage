@@ -1,15 +1,14 @@
 # SWOT's net impact on reservoir storage monitoring
 
 Code for three analyses of what the Surface Water and Ocean Topography mission adds to reservoir
-storage estimation, accompanying the paper *Quantifying the net impact of SWOT on reservoir
-monitoring*.
+storage estimation.
 
 The three are not interchangeable, and they are not equally direct evidence:
 
 | | What it does | How SWOT is used |
 |---|---|---|
 | **SWOTNOW** | Estimates present-day storage daily, using no in-situ record, and from each reservoir's own record only the observations up to the day being estimated (plus a few declared per-reservoir constants; see `config/swotnow.yaml`) | Directly: each SWOT water level converts to a storage value |
-| **SWOTRACE** | Reconstructs monthly storage anomalies for 9,401 reservoirs, 1984–2021 | Indirectly: SWOT never observed the period reconstructed. It constrains part of an area–elevation relationship, and the historical surface-area record supplies all the temporal variation |
+| **SWOTRACE** | Reconstructs monthly storage anomalies for reservoirs outside the GRanD catalogue, 1984–2021 | Indirectly: SWOT never observed the period reconstructed. It constrains part of an area–elevation relationship, and the historical surface-area record supplies all the temporal variation |
 | **Global uncertainty** | Propagates per-reservoir error to an uncertainty on globally summed storage anomaly | At one further remove: an error relationship calibrated on the present-day analysis, applied to reservoirs that were never scored |
 
 Both products report a storage **anomaly** — a reservoir's departure from its own mean — not an
@@ -18,7 +17,7 @@ instrument constrains the elevation of a reservoir bed.
 
 ## Status
 
-> SWOTNOW is the strictly causal model of the paper (increment-gate outlier screen, one-sided area,
+> SWOTNOW is the strictly causal model (increment-gate outlier screen, one-sided area,
 > four seeds); `tests/test_no_lookahead.py` checks the causality claim by deleting everything after
 > day *t* and rebuilding. What was checked against the shipped results, and what is not included
 > (the Table S3 pipeline, the screen-audit explorations, the figure scripts), is in
@@ -139,8 +138,8 @@ limitation of the work.
 
 ## Citing
 
-See `CITATION.cff`. The accompanying paper is not yet published; the entry will be completed on
-acceptance.
+The v0.1.0 release of this code is archived at <https://doi.org/10.5281/zenodo.23270630>. See
+`CITATION.cff`.
 
 ## Licence
 

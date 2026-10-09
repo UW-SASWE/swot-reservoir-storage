@@ -1,7 +1,7 @@
 # Validation
 
 What each component was checked against, and how to repeat the check. "Shipped" means the product
-tables released with the paper.
+tables in the Zenodo data deposit.
 
 ## SWOTNOW
 

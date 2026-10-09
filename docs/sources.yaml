@@ -41,7 +41,7 @@ observations:
   - key: gsw_cloud_corrected
     name: Cloud-corrected surface area (recurrence gap-filling after Zhao and Gao 2018)
     used_by: [swotrace]
-    access: produced in this work from the monthly history above, with the method of the paper
+    access: produced in this work from the monthly history above, with the method of Zhao and Gao (2018)
     paper: https://doi.org/10.1029/2018GL078343   # Zhao and Gao 2018, Geophysical Research Letters
     checked: "2026-10-07, DOI taken from the GRSAD README distributed with the data"
 

@@ -40,7 +40,7 @@ TRAINING POOL (leave-reservoirs-out)
     generalisation to reservoirs the model has never seen.
 
     `insitu_splits` lists candidates; the pool is what survives the data requirements in
-    build_daily. Take counts from the paper's Table 1 or print them from a run.
+    build_daily. Print the counts from a run.
 
 INPUTS   all resolved through common.paths; see config/paths.example.yaml
     features            daily multi-sensor table, one row per reservoir per day
@@ -768,7 +768,7 @@ def main():
               f"R²_bc={m['r2_bc'].median():.3f}  "
               f"NSE={m['nse'].median():.3f}  "
               f"RMSE={m['rmse_mcm'].median():.1f} MCM")
-    # No expected values are printed: score a run against the paper's tables.
+    # No expected values are printed: score a run against the evaluation tables in the data deposit.
     print(f"\n  Outputs → {run_dir}", flush=True)
 
 

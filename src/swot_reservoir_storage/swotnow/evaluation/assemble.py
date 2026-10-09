@@ -1,4 +1,4 @@
-"""Assembling the SWOTNOW evaluation tables reported in the paper.
+"""Assembling the SWOTNOW evaluation tables.
 
 Two measures, because either alone misleads.
 
@@ -108,7 +108,7 @@ def assemble(gauge_free_dir: Path, out_dir: Path, runs_dir: Path | None = None):
     out_dir.mkdir(parents=True, exist_ok=True)
     tags = {s: _CFG.evaluation.run_tag.format(seed=s) for s in SEEDS}
 
-    # ---- anomaly: renamed from the scorer's arm names to the paper's ---------------------
+    # ---- anomaly: renamed from the scorer's arm names ---------------------
     # The scorer's 'ungauged' arm IS the product. Its 'gauged' arm is NOT carried into these tables:
     # the published models are trained gauge-free, so handing them a gauge-derived reference level
     # feeds them an input they were not fitted to, and scoring them with the gauge-free switch left on

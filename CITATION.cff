@@ -1,6 +1,6 @@
 cff-version: 1.2.0
 title: "SWOT's net impact on reservoir storage monitoring"
-message: "If you use this software, please cite both the software and the paper it accompanies."
+message: "If you use this software, please cite it using the metadata in this file."
 type: software
 authors:
   - given-names: Mridul
@@ -9,7 +9,8 @@ authors:
 repository-code: "https://github.com/UW-SASWE/swot-reservoir-storage"
 license: MIT
 version: 0.1.0
-date-released: "2026-09-27"
+date-released: "2026-10-09"
+doi: "10.5281/zenodo.23270630"
 abstract: >-
   Code for three analyses quantifying what the Surface Water and Ocean Topography (SWOT)
   mission adds to reservoir storage monitoring: SWOTNOW, a present-day storage estimator
@@ -26,11 +27,3 @@ references:
     year: 2026
     version: "1"
     license: CC-BY-4.0
-# The accompanying paper is not yet published. Fill in and uncomment before release:
-# preferred-citation:
-#   type: article
-#   authors: [...]
-#   title: "Quantifying the net impact of SWOT on reservoir monitoring"
-#   journal: "Earth and Space Science"
-#   year: 2026
-#   doi: "..."

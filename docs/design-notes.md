@@ -1,8 +1,8 @@
 # Design notes
 
 Why the less obvious settings are what they are. The config files and source say *what* each setting
-does; this file gives the reasoning. Evaluation results (counts, scores, test statistics) are reported
-in the paper, not here.
+does; this file gives the reasoning. Evaluation results (counts, scores, test statistics) are not given
+here.
 
 ## Configuration lives in files
 
@@ -132,8 +132,8 @@ different thresholds and both move every median. `min_test_observations` is the 
   population.
 - The bed term is SWOT-independent: it cancels in the dynamic dU but inflates both arms, so it lowers
   only the absolute arm's percentage reduction.
-- `--legacy` reproduces the pre-correction behaviour only so old runs can be re-created; no number in
-  the paper comes from it.
+- `--legacy` reproduces the pre-correction behaviour only so old runs can be re-created; no reported result
+  comes from it.
 
 ## SWOTRACE
 

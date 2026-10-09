@@ -1,6 +1,6 @@
 """The gauge-free evaluation: what survives when a reservoir has no in-situ record.
 
-This is the scorer behind the paper's present-day numbers. A gauged reservoir would score
+This is the scorer for the present-day evaluation. A gauged reservoir would score
 well partly *because* it is gauged (the anchor's reference level could come from the gauge), which
 overstates what the method delivers on the ungauged majority. Here the gauge is withheld from
 the estimate and used only as the reference to score against.
@@ -25,7 +25,7 @@ the SWOT anchor is carried onto. Arms A-C are then ALSO re-scored on D's own sup
 B-against-D comparison is on identical dates rather than merely identical reservoirs. Those are
 the `p_*` columns, and they are the ones to use for that comparison.
 
-Arm A is a DIAGNOSTIC and is not reported in the paper. The published models are trained gauge-free,
+Arm A is a DIAGNOSTIC and is not a reported result. The published models are trained gauge-free,
 so arm A hands the network a gauge-derived reference level it was never fitted to. Arms B-D are the
 results.
 """
