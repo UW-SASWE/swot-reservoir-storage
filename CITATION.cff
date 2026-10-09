@@ -8,9 +8,9 @@ authors:
     affiliation: "SASWE, Department of Civil and Environmental Engineering, University of Washington"
 repository-code: "https://github.com/UW-SASWE/swot-reservoir-storage"
 license: MIT
-version: 0.1.0
+version: 0.1.1
 date-released: "2026-10-09"
-doi: "10.5281/zenodo.23270630"
+doi: "10.5281/zenodo.23270504"
 abstract: >-
   Code for three analyses quantifying what the Surface Water and Ocean Topography (SWOT)
   mission adds to reservoir storage monitoring: SWOTNOW, a present-day storage estimator

@@ -138,7 +138,7 @@ limitation of the work.
 
 ## Citing
 
-The v0.1.0 release of this code is archived at <https://doi.org/10.5281/zenodo.23270630>. See
+This code is archived on Zenodo; all versions are at <https://doi.org/10.5281/zenodo.23270504>. See
 `CITATION.cff`.
 
 ## Licence
