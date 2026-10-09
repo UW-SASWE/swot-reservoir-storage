@@ -1,0 +1,12 @@
+# Runtime dependencies. Versions are floors, not pins: nothing here is used in a way that
+# depends on a specific release. environment.yml pins an exact, tested environment.
+numpy>=1.24
+pandas>=2.0
+scipy>=1.10
+pyyaml>=6.0
+pyarrow>=12.0            # parquet
+scikit-learn>=1.3        # isotonic regression for the area-elevation relationship
+statsmodels>=0.14        # LOWESS, for the two-sided smoother comparison
+torch>=2.0               # SWOTNOW only
+matplotlib>=3.7          # figures only
+cartopy>=0.22            # the coverage map only

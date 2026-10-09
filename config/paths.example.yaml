@@ -1,0 +1,134 @@
+# Where the data lives on this machine.
+#
+#   cp config/paths.example.yaml config/paths.yaml     # paths.yaml is ignored by git
+#   $EDITOR config/paths.yaml
+#   python scripts/check_paths.py                       # reports what resolves and what does not
+#
+# A single entry can be overridden for one run with the environment variable SRS_<NAME>, e.g.
+#   SRS_FEATURES=/scratch/features.parquet python ...
+#
+# None of the data is redistributed; docs/data-sources.md says where each dataset comes from. You do not
+# need all of it: each analysis reports the paths it needs. Notes on the less obvious entries are in
+# docs/design-notes.md.
+
+# ---- Outputs ----------------------------------------------------------------------------------
+
+# Everything the code writes goes under here (models, evaluation tables, products).
+work_dir: /path/to/your/work
+
+# ---- Assembled inputs -------------------------------------------------------------------------
+
+# Daily multi-sensor table, one row per reservoir per day over the SWOT era.
+features: /path/to/features.parquet
+
+# The 23 static attributes per reservoir (ATTR_COLS in swotnow/model/trainer.py). aec_slope_mid must
+# be computed from the integral of A dh.
+static_attributes: /path/to/static_attributes.parquet
+
+# One-sided smoothed surface area per SWOT pass plus the raw per-pass area, used when
+# anchor.area_smoother is 'causal'. Built by scripts/swotnow/build_causal_area.py, which stops unless
+# it covers every pass row in the feature table.
+causal_surface_area: /path/to/sa_causal_full.parquet
+
+# Second Hydrocron cache, used only by the causal-area builder for lakes missing from swot_granules.
+swot_granules_cache: /path/to/hydrocron_cache
+
+# Train / validation / test assignment by reservoir.
+insitu_splits: /path/to/insitu_splits.csv
+
+# Reservoir universe with SWOT coverage tiers; lake_id is the join key for the whole project. Test
+# GRanD membership with has_grand_link, not by deriving it from a lake_id mapping (which is many-to-one).
+global_universe: /path/to/global_universe_v2.csv
+
+# The first version of the universe table, read by the global-uncertainty error model. The two are not
+# interchangeable (see docs/design-notes.md). Both repeat lake_id, so deduplicate before joining.
+global_universe_v1: /path/to/global_universe.csv
+
+# Per-reservoir absolute-storage anchor (shared bed term in the error budget).
+storage_anchor: /path/to/storage_anchor.csv
+
+# Measured per-reservoir storage SD from the production smoother run; preferred by the error model
+# over the wse_std * AREA_SKM proxy where it exists.
+smoother_measured_summary: /path/to/storage_smoother_global/summary.csv
+
+# Held-out smoother metrics, the error model's calibration input. Point at a metrics.csv that still
+# sits beside its predictions.parquet: the error model reads that sibling.
+smoother_metrics: /path/to/calibration/metrics.csv
+
+# TMS-OS surface area from HLS optical plus Sentinel-1 SAR. Optional.
+tmsos_hls_sar: /path/to/tmsos_hls_sar
+
+# ---- SWOT observations ------------------------------------------------------------------------
+
+# Per-lake CSVs of SWOT L2 LakeSP water-surface elevation and area from the Hydrocron API, one per
+# lake_id. See docs/data-sources.md for the fetch script.
+swot_granules: /path/to/hydrocron_global
+
+# Crosswalk from SWOT lake_id to GRanD id with the GRanD capacity, area and coordinates. Optional;
+# it takes precedence over global_universe_v1 for the reservoirs it lists.
+reservoir_lookup: /path/to/global_grand_lake_id_lookup.csv
+
+# GRanD v1.3 dams shapefile and the reservoir polygons (GeoJSON with lake_id, GRAND_ID, lat, lon),
+# read by swotnow.preprocessing.static_attributes. Optional for reservoirs without a GRanD record.
+grand_dams: /path/to/GRanD_dams_v1_3.shp
+reservoir_polygons: /path/to/selected_reservoirs.geojson
+
+# ---- Surface-area records (Methods 2.1.3) -----------------------------------------------------
+
+# Harmonized Landsat and Sentinel-2 optical water area: the between-pass channel for SWOTNOW.
+hls_area: /path/to/hls_global/features
+
+# TMS-OS fused optical + Sentinel-1 area, the pre-SWOT arm. Read in this order, first record wins.
+tmsos_area_primary: /path/to/tmsos_stock_v2
+tmsos_area: /path/to/rat_tmsos
+
+# Area-elevation curves derived from SRTM by the RAT package.
+srtm_aec: /path/to/rat_tmsos/aec
+
+# Per-reservoir hypsometry traits, used by the historical reconstruction.
+global_hypsometry: /path/to/global_hypsometry_trait.csv
+
+# Combined SWOT Hydrocron cache read by the historical reconstruction; larger than swot_granules.
+swot_hydrocron_combined: /path/to/hydrocron_combined_v2
+
+# Cloud-corrected surface area (recurrence gap-filling of cloudy pixels, after Zhao and Gao 2018).
+gsw_cloud_corrected: /path/to/gsw_zhaogao_pilot
+
+# JRC Global Surface Water monthly history.
+gsw_monthly: /path/to/gsw_monthly/features
+
+# Sentinel-1 SAR area. Optional; tested and not adopted (Methods 2.2.2).
+sar_area: /path/to/sar_global/features
+
+# ---- Forcing and reference data ---------------------------------------------------------------
+
+# ERA5-Land precipitation routed to each reservoir. Optional; available for about a fifth of reservoirs.
+precip: /path/to/precip_gee/features
+
+# In-situ gauge records in the unified schema, plus inventory.csv. Used only as the reference to
+# score against, never as an input to an estimate.
+insitu: /path/to/insitu_unified
+
+# SWOT Prior Lake Database, the source of reservoir coordinates (dam coordinates in some inventories are 0.0).
+pld: /path/to/pld_global_lakes.parquet
+
+# ---- Trained models and published products ----------------------------------------------------
+
+# Trained runs, one subdirectory per run (swot_gru_<tag>) with model.pt, attr_norm.npz and the
+# prediction parquets. The trainer writes into work_dir/runs; set this if your runs live elsewhere.
+runs_dir: /path/to/runs
+
+# The SWOTNOW model to evaluate: a directory holding model.pt and attr_norm.npz.
+swotnow_model: /path/to/SWOTNOW/model
+
+# Published products used for comparison in Results 3.2. Optional.
+grs: /path/to/grs/Global_Reservoir_Storage_dataset
+glolakes: /path/to/glolakes
+lakes3d: /path/to/3dlakes
+grdl: /path/to/grdl/Data
+
+# ---- External software ------------------------------------------------------------------------
+
+# RAT 3.0 source tree (TMS-OS algorithm; Das et al., 2022; Minocha et al., 2024). Only needed to
+# rebuild the TMS-OS area record.
+rat_src: /path/to/RAT/src

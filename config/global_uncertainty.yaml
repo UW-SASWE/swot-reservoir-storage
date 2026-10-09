@@ -1,0 +1,25 @@
+# GLOBAL UNCERTAINTY: propagation of per-reservoir error to the globally summed storage anomaly.
+# The committed values are the published configuration; to change one without editing this file use
+# config/global_uncertainty.local.yaml. Rationale: docs/design-notes.md.
+
+error_model:
+  # Denominator when fitting the error-per-unit-variability coefficient.
+  #   window   storage SD within each reservoir's own held-out window (published)
+  #   full     full-record SD (historical; deflates the coefficient)
+  fit_denominator: window
+
+  # With fit_denominator 'window', drop fit reservoirs whose held-out window covers less than this
+  # fraction of their full-record variability.
+  min_window_coverage: 0.5
+
+  # Cap the inferred storage SD at half the capacity (storage is bounded by [0, capacity]).
+  enforce_capacity_bound: true
+
+aggregation:
+  draws: 1000   # Monte Carlo draws for the global total
+  seed: 0       # fixed for reproducibility; the result is insensitive to it at this many draws
+
+  # Both correlation bounds are reported.
+  #   independent   errors cancel in quadrature across reservoirs (optimistic)
+  #   correlated    fully correlated within a region, independent across regions (pessimistic)
+  bounds: [independent, correlated]

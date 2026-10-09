@@ -1,0 +1,152 @@
+# Where every external dataset comes from. One entry per input; `key` is the entry in config/paths.yaml.
+#
+#   identifier   DOI or URL of the dataset itself (not only the paper)
+#   paper        the article to cite
+#   licence      as stated by the source; null where not yet confirmed
+#   version_used the release this work used; null where not yet recorded
+#   checked      how the identifier was confirmed; "no" means it is still to be confirmed
+#
+# Entries with `checked: no` carry no identifier on purpose: an identifier is added only after it has
+# been opened and matched to the dataset.
+
+observations:
+  - key: swot_granules
+    name: SWOT Level 2 Lake Single-Pass Vector data product (L2_HR_LakeSP)
+    used_by: [swotnow, swotrace, global_uncertainty]
+    access: NASA PO.DAAC, through the Hydrocron API or Earthdata search; Earthdata login required
+    identifier: https://doi.org/10.5067/SWOT-LAKESP-2.0
+    version_used: null          # record the version of the collection actually downloaded
+    licence: null
+    checked: "2026-10-07, web search (collection DOI for version 2.0)"
+
+  - key: pld
+    name: SWOT Prior Lake Database (PLD)
+    used_by: [swotnow, swotrace, global_uncertainty]
+    role: reservoir coordinates and the lake_id join key
+    access: Hydroweb (Theia), https://hydroweb.next.theia-land.fr/catalog/details/SWOT_PRIOR_LAKE_DATABASE
+    paper: https://doi.org/10.1029/2023WR036896   # Wang et al. 2025, Water Resources Research
+    version_used: null
+    licence: null
+    checked: "2026-10-07, web search"
+
+  - key: gsw_monthly
+    name: JRC Global Surface Water, monthly history
+    used_by: [swotrace]
+    access: Google Earth Engine
+    paper: https://doi.org/10.1038/nature20584    # Pekel et al. 2016, Nature
+    version_used: null          # the Earth Engine collection id and version have to be recorded
+    licence: "free of charge, without restriction of use (Copernicus Programme); cite the dataset and the article"
+    checked: "2026-10-07, web search (licence statement and paper); collection id not confirmed"
+
+  - key: gsw_cloud_corrected
+    name: Cloud-corrected surface area (recurrence gap-filling after Zhao and Gao 2018)
+    used_by: [swotrace]
+    access: produced in this work from the monthly history above, with the method of the paper
+    paper: https://doi.org/10.1029/2018GL078343   # Zhao and Gao 2018, Geophysical Research Letters
+    checked: "2026-10-07, DOI taken from the GRSAD README distributed with the data"
+
+  - key: hls_area
+    name: Harmonized Landsat and Sentinel-2 optical water area
+    used_by: [swotnow]
+    access: derived through Google Earth Engine; needs `earthengine authenticate`
+    identifier: null
+    checked: "no"
+
+  - key: sar_area
+    name: Sentinel-1 surface area
+    used_by: [swotnow]
+    role: optional; tested and not adopted
+    access: Google Earth Engine
+    identifier: null
+    checked: "no"
+
+  - key: precip
+    name: ERA5-Land precipitation, routed per reservoir
+    used_by: [swotnow]
+    role: optional
+    access: Google Earth Engine
+    identifier: null
+    checked: "no"
+
+  - key: tmsos_area
+    name: TMS-OS fused optical and Sentinel-1 surface area
+    used_by: [swotnow, swotrace]
+    access: produced with the RAT 3.0 package (see rat_src)
+    identifier: null
+    checked: "no"
+
+  - key: srtm_aec
+    name: Area-elevation curves from SRTM
+    used_by: [swotnow, swotrace]
+    access: produced with the RAT 3.0 package from SRTM
+    identifier: null
+    checked: "no"
+
+reservoir_inventories:
+  - key: global_universe
+    name: Reservoir universe with SWOT coverage tiers
+    used_by: [swotrace, global_uncertainty]
+    access: built from Global Dam Watch and the PLD; not yet released with this repository
+    release: planned
+    checked: "no"
+
+  - name: Global Dam Watch database, version 1.0 (GDW)
+    used_by: [swotrace, global_uncertainty]
+    identifier: https://figshare.com/articles/dataset/Global_Dam_Watch_database_version_1_0/25988293
+    paper: https://doi.org/10.1038/s41597-024-03752-9   # Lehner et al. 2024, Scientific Data
+    licence: null
+    checked: "2026-10-07, web search"
+
+  - name: Global Reservoir and Dam Database v1 (GRanD)
+    used_by: [swotrace]
+    role: separates catalogued dams from the rest
+    identifier: https://doi.org/10.7927/H4N877QK     # Lehner et al. 2011, NASA SEDAC
+    checked: "2026-10-07, DOI taken from the GRSAD README distributed with the data"
+
+in_situ:
+  - key: insitu
+    name: Gauge records, harmonised to one schema
+    used_by: [swotnow, global_uncertainty]
+    role: reference only; no gauge is an input to any estimate
+    access: see docs/data-sources.md ("In-situ gauge records")
+    release: planned (Zenodo), subject to the terms of each source
+    checked: "no"
+
+  - name: GROWL, Global Reservoir Observed Water Levels, v1.0
+    used_by: [swotnow, global_uncertainty]
+    role: a large share of the harmonised gauge series
+    identifier: https://doi.org/10.6084/m9.figshare.31225405
+    licence: CC-BY 4.0
+    checked: "2026-10-07, the README distributed with the data states the licence and the repository DOI"
+
+comparison_products:
+  - key: grs
+    name: Global Reservoir Storage (GRS)
+    paper: "Li, Zhao, Allen and Gao 2023, Nature Communications 14, 3203"
+    identifier: null
+    checked: "paper confirmed 2026-10-07, web search; dataset link to be confirmed"
+
+  - key: glolakes
+    name: GloLakes
+    identifier: https://doi.org/10.25914/K8ZF-6G46
+    paper: https://doi.org/10.5194/essd-16-201-2024   # Hou et al. 2024, Earth System Science Data
+    checked: "2026-10-07, web search"
+
+  - key: lakes3d
+    name: 3D-LAKES
+    identifier: https://zenodo.org/records/13107867
+    paper: https://doi.org/10.1038/s41597-025-05911-y # Huang et al. 2025, Scientific Data
+    checked: "2026-10-07, web search"
+
+  - key: grdl
+    name: GRDL deep-learning bathymetry
+    identifier: null
+    paper: null
+    checked: "no"
+
+software:
+  - key: rat_src
+    name: RAT 3.0 source tree
+    role: only needed to rebuild the TMS-OS area record
+    identifier: null
+    checked: "no"

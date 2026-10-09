@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "swot-reservoir-storage"
+version = "0.1.0"
+description = "SWOT's net impact on reservoir storage monitoring"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [{name = "Mridul Sharma"}]
+dependencies = [
+  "numpy>=1.24", "pandas>=2.0", "scipy>=1.10",
+  "pyyaml>=6.0", "pyarrow>=12.0", "scikit-learn>=1.3",
+]
+
+[project.optional-dependencies]
+model = ["torch>=2.0", "statsmodels>=0.14"]
+figures = ["matplotlib>=3.7", "cartopy>=0.22"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

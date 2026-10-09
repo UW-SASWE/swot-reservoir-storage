@@ -1,0 +1,23 @@
+# SWOTRACE: monthly storage-anomaly reconstruction, 1984-2021. The committed values are the
+# published configuration; to change one without editing this file use config/swotrace.local.yaml.
+# SWOT constrains part of the area-elevation relationship; the temporal variation comes from the
+# historical surface-area record (see docs/design-notes.md).
+
+period:
+  start: 1984
+  end:   2021
+
+curve:
+  n_grid: 120        # elevation points across the combined relation
+  min_band_m: 0.5    # a reservoir whose water surface moves less than this over the record gets no shape metric
+  n_bins: 20         # bins used when summarising a relation
+
+area:
+  min_months: 12             # monthly area observations needed to build a series
+  valid_fraction_floor: 0.05 # wet-pixel counts are divided by the observable fraction above this floor; never gate on it
+  pixel_area_km2: 0.0009     # Landsat / Global Surface Water pixel, 30 m x 30 m
+
+confidence:
+  # Tier boundaries on the SD of SWOT-era water-surface elevation (m).
+  wse_std_low_mid: 1.61
+  wse_std_mid_high: 3.73

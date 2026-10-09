@@ -1,0 +1,13 @@
+# Machine-specific data locations. The template is config/paths.example.yaml.
+config/paths.yaml
+config/*.local.yaml
+
+# Data is never committed: none of it is redistributable. See docs/data-sources.md.
+
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+*.egg-info/
+.venv/
+build/
+dist/

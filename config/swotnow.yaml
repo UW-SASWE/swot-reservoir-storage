@@ -1,0 +1,82 @@
+# SWOTNOW: present-day storage anomaly estimation.
+#
+# The committed values are the published configuration. To change a setting without editing this
+# file, put it in config/swotnow.local.yaml. Reasoning behind the less obvious settings is in
+# docs/design-notes.md.
+
+period:
+  # SWOT's 21-day science orbit began 21 July 2023; starting in August avoids the cal/val phase.
+  start: 2023-08-01
+  end:   2026-08-31
+
+features:
+  hls_max_gap_days: 10      # optical observations are held at most this many days, then blank
+  lowess_frac: 0.30         # two-sided smoothing of the per-pass area written to the feature table;
+                            # the strict model replaces it with the causal area (anchor.area_smoother)
+
+anchor:
+  # Outlier screen on the SWOT pass series, applied before the anchor is carried forward.
+  #   causal_C2b_incr_n4   increment gate (published): rejects a pass whose step from the last
+  #                        accepted pass, per square-root day, exceeds 4 robust deviations of the
+  #                        last 8 accepted steps. Judges each pass from earlier passes only.
+  #   causal_C0_none, none no screen
+  #   hampel_interp, hampel   two-sided screens; they look ahead, so they are not admissible for a
+  #                        present-day estimate (ablation only)
+  # causal_* screens need area_smoother: causal.
+  screen: causal_C2b_incr_n4
+  screen_window: 3          # two-sided screens only: neighbours on each side
+  screen_nsigma: 3.0        # two-sided screens only: scaled median absolute deviations
+
+  # Smoother for the per-pass surface area.
+  #   causal     each pass uses only itself and earlier passes (published)
+  #   twosided   centred window; retrospective use only
+  area_smoother: causal
+  area_smoother_frac: 0.30  # window as a fraction of the reservoir's passes
+  causal_area_strict: true  # raise if any SWOT pass row has no causal area
+
+  # Nominal reference storage (fraction of capacity) for an ungauged reservoir. Nothing ties an
+  # ungauged reservoir to a datum; per-reservoir centring (target below) removes it.
+  ungauged_mean_fill: 0.01
+
+target:
+  centre_per_reservoir: true   # target and anchor centred on their own means, so the output is an anomaly
+  clip_fill_fraction: false    # keep false: a clip to [0, 1] would delete the below-mean half of a centred series
+
+inputs:
+  dynamic:
+    - anchor_fill_fraction    # the physical estimate
+    - hls_water_fraction      # optical area / nominal area; the between-pass sensor
+    - precip_routed           # zero where unavailable
+    - days_since_swot
+    - sin_doy
+    - cos_doy
+  # Three further channels exist in the implementation but are constant over a record
+  # (sar_water_frac, has_sar, has_hls). Kept so tensor shapes match the published model.
+  include_inert_channels: true
+  use_gauge: false          # no in-situ input anywhere
+
+model:
+  long_window: 180          # days
+  short_window: 10          # days
+  hidden: 64
+  attr_dim: 16
+  dropout: 0.2
+  n_static_attributes: 23
+
+training:
+  seeds: [42, 43, 44, 45]
+  max_epochs: 80
+  patience: 12              # early stopping, in epochs without validation improvement
+  batch_size: 256
+  learning_rate: 0.001
+  pseudo_weight: 0.3        # loss weight of reservoirs with no gauge (target = the anchor); regularises
+  select_on: mse            # checkpoint metric: mse | kge
+  precip_routing_tau_days: 15.0
+  n_threads: 8              # speed only
+  min_test_observations: 10 # scoreable days a held-out reservoir needs
+
+evaluation:
+  horizons_days: [1, 3, 5, 7, 9, 11, 13, 14]   # change-skill horizons
+  min_days_scored: 60       # change metrics
+  min_days_anomaly: 30      # anomaly metrics; a different threshold, and both move every median
+  run_tag: "strict_c2b_s{seed}"
